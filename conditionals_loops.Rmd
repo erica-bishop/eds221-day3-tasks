@@ -65,7 +65,7 @@ main_ingredient <- c("veggie", "chicken", "steak")
 burrito_cost <- vector(mode = "numeric", length = length(main_ingredient))
 
 for (i in seq_along(main_ingredient)) {
-  if (main_ingredient[i] == "vegie") {
+  if (main_ingredient[i] == "veggie") {
     burrito_cost[i] <- base_burrito
   } else if (main_ingredient[i] == "chicken") {
     burrito_cost[i] <- base_burrito + 3
