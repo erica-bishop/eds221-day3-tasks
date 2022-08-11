@@ -1,0 +1,81 @@
+---
+title: "Part 2. Real data"
+author: "Erica Bishop"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(janitor)
+library(dplyr)
+```
+
+Step 1: read in the data
+
+```{r}
+
+toolik_chem <- read_csv(here("data","2011_Kling_Akchem.csv"), na = c(".")) |> 
+  clean_names()
+
+```
+
+Now, create a subset that contains only observations from the Toolik Inlet site and only contains vairables for pH, dissolved organic carbon (DOC), and total dissolved nitrogen (TDN)
+
+hint: use dplyr::select()
+
+First, check out names in the console
+
+```{r}
+
+inlet_biochem <- toolik_chem |> 
+  filter(site == "Toolik Inlet") |> 
+  select(p_h, doc_u_m, tdn_u_m)
+
+```
+
+Now find the mean value in each column three ways:
+
+1. for loop for each mean
+
+```{r}
+
+mean_inlet_biochem <- vector(mod = "numeric", length = ncol(inlet_biochem))
+
+for (i in seq_along(inlet_biochem)) {
+  mean_val <- mean(inlet_biochem[[i]], na.rm = TRUE)
+  mean_inlet_biochem[i] <- mean_val
+}
+
+mean_inlet_biochem
+
+```
+
+
+2. apply, across, or purrr:map_df
+
+```{r}
+#using apply
+
+method2 <- apply(X = inlet_biochem, MARGIN = 2, FUN = mean, na.rm = TRUE)
+
+#using across
+
+method_across <- inlet_biochem |> 
+  summarize(across(where(is.numeric), mean, na.rm = TRUE))
+
+# using purrr
+method3 <- purrr::map_df(inlet_biochem, mean, na.rm = TRUE)
+
+
+##can check and see that all of these methods output equal data frames! Woohoo!
+
+```
+
+
+
+
+
+
